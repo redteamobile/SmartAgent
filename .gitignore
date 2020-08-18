@@ -1,1 +1,8 @@
+# Not used file
 .DS_Store
+./app/.cxx
+
+# Gradle files
+./app/build
+
+

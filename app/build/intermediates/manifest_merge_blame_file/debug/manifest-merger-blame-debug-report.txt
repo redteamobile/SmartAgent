@@ -1,0 +1,130 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.redteamobile.smart"
+4    android:versionCode="1"
+5    android:versionName="android-euicc-agent-general_v0.0.0.6_android_staging_debug" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="22"
+8-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml
+9        android:targetSdkVersion="26" />
+9-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml
+10
+11    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+11-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:5:5-80
+11-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:5:22-78
+12    <uses-permission android:name="android.permission.INTERNET" />
+12-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:6:5-66
+12-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:6:22-64
+13    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+13-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:7:5-75
+13-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:7:22-73
+14    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+14-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:8:5-78
+14-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:8:22-76
+15    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+15-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:9:5-74
+15-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:9:22-72
+16    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+16-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:10:5-81
+16-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:10:22-78
+17    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
+17-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:12:5-85
+17-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:12:22-83
+18    <!--
+19      Required by getDataEnabled(), setDataEnabled(), setDataRoamingEnabled(),
+20      ~ setDefaultDataSubId(), setDisplayName()
+21    -->
+22    <uses-permission android:name="android.permission.MODIFY_PHONE_STATE" />
+22-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:15:5-76
+22-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:15:22-74
+23    <!-- Required by setDataRoamingEnabled() -->
+24    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+24-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:17:5-72
+24-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:17:22-70
+25    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
+25-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:18:5-79
+25-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:18:22-77
+26    <!-- Required by clearApn(), setDefaultDataSubId() -->
+27    <uses-permission android:name="android.permission.WRITE_APN_SETTINGS" />
+27-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:20:5-76
+27-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:20:22-74
+28    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+28-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:21:5-80
+28-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:21:22-78
+29    <uses-permission android:name="android.com.permission.ACCESS_RBOOK_SERVIC" />
+29-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:22:5-81
+29-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:22:22-79
+30
+31    <application
+31-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:24:5-64:19
+32        android:name="com.redteamobile.smart.App"
+32-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:31:9-28
+33        android:allowBackup="true"
+33-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:25:9-35
+34        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+34-->[androidx.core:core:1.1.0] /Users/steve.hao/.gradle/caches/transforms-2/files-2.1/805e05a71e209033ab91722f2d3217f8/core-1.1.0/AndroidManifest.xml:24:18-86
+35        android:debuggable="true"
+36        android:icon="@mipmap/ic_launcher"
+36-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:26:9-43
+37        android:label="@string/app_name"
+37-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:27:9-41
+38        android:roundIcon="@mipmap/ic_launcher_round"
+38-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:28:9-54
+39        android:supportsRtl="true"
+39-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:29:9-35
+40        android:theme="@style/AppTheme" >
+40-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:30:9-40
+41        <activity android:name="com.redteamobile.smart.MainActivity" >
+41-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:32:9-38:20
+41-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:32:19-69
+42            <intent-filter>
+42-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:33:13-37:29
+43                <action android:name="android.intent.action.MAIN" />
+43-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:34:17-69
+43-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:34:25-66
+44
+45                <category android:name="android.intent.category.LAUNCHER" />
+45-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:36:17-77
+45-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:36:27-74
+46            </intent-filter>
+47        </activity>
+48
+49        <service
+49-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:40:9-42:37
+50            android:name="com.redteamobile.smart.agent.AgentService"
+50-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:40:18-52
+51            android:enabled="true"
+51-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:42:13-35
+52            android:exported="true" />
+52-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:41:13-36
+53
+54        <receiver
+54-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:44:9-52:20
+55            android:name="com.redteamobile.smart.agent.receiver.BootReceiver"
+55-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:45:13-56
+56            android:enabled="true" >
+56-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:46:13-35
+57            <intent-filter>
+57-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:48:13-50:29
+58                <action android:name="android.intent.action.BOOT_COMPLETED" />
+58-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:49:17-78
+58-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:49:25-76
+59            </intent-filter>
+60        </receiver>
+61        <receiver
+61-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:54:9-62:20
+62            android:name="com.redteamobile.smart.agent.receiver.ServiceStateReceiver"
+62-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:55:13-64
+63            android:enabled="true" >
+63-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:56:13-35
+64            <intent-filter>
+64-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:58:13-60:29
+65                <action android:name="android.intent.action.SERVICE_STATE" />
+65-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:59:17-77
+65-->/Users/steve.hao/Desktop/Smart/Agent/app/src/main/AndroidManifest.xml:59:25-75
+66            </intent-filter>
+67        </receiver>
+68    </application>
+69
+70</manifest>
