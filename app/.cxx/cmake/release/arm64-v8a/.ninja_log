@@ -1,0 +1,6 @@
+# ninja log v5
+0	224	1596530075	CMakeFiles/bridge.dir/bridge.c.o	f6604e80fb841d6e
+225	284	1596530075	/Users/steve.hao/Desktop/Smart/Agent/app/build/intermediates/cmake/release/obj/arm64-v8a/libbridge.so	9884aeec3fea9c46
+0	7	0	clean	29c160b47cd1f3a8
+1	364	1596680941	CMakeFiles/bridge.dir/bridge.c.o	f6604e80fb841d6e
+365	424	1596680941	/Users/steve.hao/Desktop/Smart/Agent/app/build/intermediates/cmake/release/obj/arm64-v8a/libbridge.so	9884aeec3fea9c46

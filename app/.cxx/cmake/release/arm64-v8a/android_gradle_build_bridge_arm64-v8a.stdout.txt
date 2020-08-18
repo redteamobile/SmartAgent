@@ -1,0 +1,2 @@
+ninja: Entering directory `/Users/steve.hao/Desktop/Smart/Agent/app/.cxx/cmake/release/arm64-v8a'
+ninja: no work to do.

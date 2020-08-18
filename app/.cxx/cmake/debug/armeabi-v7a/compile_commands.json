@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/Users/steve.hao/Desktop/Smart/Agent/app/.cxx/cmake/debug/armeabi-v7a",
+  "command": "/Users/steve.hao/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=armv7-none-linux-androideabi22 --gcc-toolchain=/Users/steve.hao/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/steve.hao/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Dbridge_EXPORTS -I/Users/steve.hao/Desktop/Smart/Agent/app/src/main/cpp  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -mthumb -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/bridge.dir/bridge.c.o   -c /Users/steve.hao/Desktop/Smart/Agent/app/src/main/cpp/bridge.c",
+  "file": "/Users/steve.hao/Desktop/Smart/Agent/app/src/main/cpp/bridge.c"
+}
+]

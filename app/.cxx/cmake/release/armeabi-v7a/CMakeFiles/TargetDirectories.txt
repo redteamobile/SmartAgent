@@ -1,0 +1,3 @@
+/Users/steve.hao/Desktop/Smart/Agent/app/.cxx/cmake/release/armeabi-v7a/CMakeFiles/rebuild_cache.dir
+/Users/steve.hao/Desktop/Smart/Agent/app/.cxx/cmake/release/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/steve.hao/Desktop/Smart/Agent/app/.cxx/cmake/release/armeabi-v7a/CMakeFiles/bridge.dir
