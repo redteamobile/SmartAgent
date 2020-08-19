@@ -6,21 +6,21 @@ import com.redteamobile.smart.agent.cellular.TelephonySetting
 import com.redteamobile.smart.agent.cellular.TelephonySettingImpl
 import com.redteamobile.smart.agent.util.SharePrefSetting
 import java.util.concurrent.TimeUnit
-import com.redteamobile.smart.lpa.euicc.CarrierService
 import com.redteamobile.monitor.IDispatcherService
+import com.redteamobile.smart.code.service.LibraryService
 
 class JniInterface {
 
     private val TAG = JniInterface::class.java.simpleName
 
     private var telephonySetting: TelephonySetting
-    private var carrierService: CarrierService
+    private var libraryService: LibraryService
     private var dispatcherService: IDispatcherService? = null
 
     constructor(context: Context) {
         System.loadLibrary("bridge")
         this.telephonySetting = TelephonySettingImpl(context)
-        this.carrierService = CarrierService(context)
+        this.libraryService = LibraryService(context)
     }
 
     fun setService(dispatcherService: IDispatcherService) {
@@ -66,11 +66,11 @@ class JniInterface {
     }
 
     fun openChannel(): Int {
-        return carrierService.openChannel()
+        return libraryService.openChannel()
     }
 
     fun closeChannel(channelId: Int): Int {
-        return if (carrierService.closeChannel(channelId))
+        return if (libraryService.closeChannel(channelId))
             0
         else {
             1
@@ -78,7 +78,7 @@ class JniInterface {
     }
 
     fun transmitApdu(data: ByteArray, channelId: Int): ByteArray {
-        return carrierService.transmit(data, channelId)!!
+        return libraryService.transmit(data, channelId)!!
     }
 
     fun commandApdu(apdu: ByteArray): ByteArray {
