@@ -13,10 +13,12 @@ import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
 import android.telephony.TelephonyManager.*
 import android.text.TextUtils
+import android.util.Log
 import com.redteamobile.smart.agent.util.LogUtil
 import com.redteamobile.smart.agent.util.SharePrefSetting
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
+import kotlin.math.log
 
 
 class TelephonySettingImpl() : TelephonySetting {
@@ -247,6 +249,7 @@ class TelephonySettingImpl() : TelephonySetting {
         var iccId: String
         iccId = telephonyManager?.simSerialNumber.toString()
         var info = subscriptionManager?.getActiveSubscriptionInfoForSimSlotIndex(0)
+        Log.d(TAG, if (info == null) "NULL" else info.iccId)
         if (info != null) {
             iccId = info.iccId
         }

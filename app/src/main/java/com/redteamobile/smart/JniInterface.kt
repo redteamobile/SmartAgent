@@ -88,9 +88,10 @@ class JniInterface {
         return dispatcherService!!.commandApdu(apdu)
     }
 
-    fun getCurrentIccid(): String {
+    fun getCurrentIccid(): String ?{
         telephonySetting.initIccid()
-        return SharePrefSetting.getCurrentIccId()
+        //return SharePrefSetting.getCurrentIccId()
+        return null
     }
 
     fun getCurrentImsi(): String {
