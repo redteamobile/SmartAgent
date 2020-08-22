@@ -1,10 +1,12 @@
 # Smart Agent
 README [中文](https://github.com/redteamobile/SmartAgent/blob/master-smart-agent/README.md) | [ENGLISH](https://github.com/redteamobile/SmartAgent/blob/master-smart-agent/README-EG.md) 
 
+* 本仓库主要管理红茶端侧安卓方案，开放部分源码。用户可以基于这部分源码，做定制化开发，以满足自己的业务场景
 
 ## 系统架构
-整个系统端到端的精简架构如下图所示，红茶物联网平台与SMDP+是服务器组件，Agent与Monitor是端侧的组件
-在使用实体eSIM只需要集成Agent即可，如需要软卡(iSIM)需要集成Agent与Monitor
+
+* 整个系统端到端的精简架构如下图所示，红茶物联网平台与SMDP+是服务端组件，Agent与Monitor是端侧的组件。
+* 在使用实体eSIM只需要集成Agent即可，如需要软卡(iSIM)需要集成Agent与Monitor。
 ![image](https://github.com/redteamobile/SmartAgent/blob/master-smart-agent/doc/img/system.jpg)
 
 ## 功能特色
