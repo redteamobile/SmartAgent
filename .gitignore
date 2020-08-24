@@ -17,5 +17,9 @@
 *.iml
 .idea/
 
+# Not ignoreN
+!./doc/*/*.apk
+
+
 
 
