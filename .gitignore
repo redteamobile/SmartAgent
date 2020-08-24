@@ -18,7 +18,7 @@
 .idea/
 
 # Not ignoreN
-!./doc/monitor/*.apk
+!./doc/**
 
 
 
