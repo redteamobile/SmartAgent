@@ -26,3 +26,6 @@ README [中文](https://github.com/redteamobile/SmartAgent/blob/master-smart-age
 
 ## 运行环境
 * 集成开发环境Android Studio，与PC的操作系统无关
+
+## 说明
+* Open Interface 在JniInterface的类中有定义及详细的说明
