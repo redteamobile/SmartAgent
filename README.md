@@ -11,12 +11,12 @@ README [中文](https://github.com/redteamobile/SmartAgent/blob/master-smart-age
 
 ## 功能特色
 
-1. *全功能 Smart Agent*
-2. *全功能 实体eSIM与iSIM*
-3. *Open Interface 管理Agent，管理卡片*
-4. *Open Interface 选择卡片类型(实体eSIM或iSIM(软卡))*
-5. *内置共享种子号，BootStrap提供初始连接*
-6. *Demo 测试界面快速上手调试*
+* 全功能 Smart Agent
+* 全功能 实体eSIM与iSIM
+* Open Interface 管理Agent，管理卡片
+* Open Interface 选择卡片类型(实体eSIM或iSIM(软卡))
+* 内置共享种子号，BootStrap提供初始连接
+* Demo 测试界面快速上手调试
 
 ## 模块说明
 
@@ -25,7 +25,9 @@ README [中文](https://github.com/redteamobile/SmartAgent/blob/master-smart-age
 * assets是共享种子号，通过BootStrap提供初始连接
 
 ## 运行环境
+
 * 集成开发环境Android Studio，与PC的操作系统无关
 
 ## 说明
+
 * Open Interface 在JniInterface的类中有定义及详细的说明

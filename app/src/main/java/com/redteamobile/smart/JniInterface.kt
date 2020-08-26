@@ -111,7 +111,7 @@ class JniInterface {
     }
 
     /**
-     * Get mcc
+     * Get mnc
      *
      * @return Int  Return the value of mnc
      */
