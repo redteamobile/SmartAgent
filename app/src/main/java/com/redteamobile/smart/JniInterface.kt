@@ -51,6 +51,14 @@ class JniInterface {
         return SharePrefSetting.getMcc()
     }
 
+<<<<<<< HEAD
+=======
+    /**
+     * Get mnc
+     *
+     * @return Int  Return the value of mnc
+     */
+>>>>>>> e7573a9... Update read me
     fun getMnc(): Int {
         return SharePrefSetting.getMnc()
     }
