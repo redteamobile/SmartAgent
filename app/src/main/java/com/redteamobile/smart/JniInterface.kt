@@ -211,8 +211,7 @@ class JniInterface {
      */
     fun getCurrentIccid(): String {
         telephonySetting.initIccid()
-        //return SharePrefSetting.getCurrentIccId()
-        return null
+        return SharePrefSetting.getCurrentIccId()
     }
 
     /**
