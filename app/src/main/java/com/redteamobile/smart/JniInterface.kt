@@ -55,9 +55,18 @@ class JniInterface {
      * Get the uicc mode
      * @param path  The path of configuration file
      *
-     * @return int  Mode，0:vUICC ，1:eUICC
+     * @return int  Mode, 0:vUICC ，1:eUICC
      */
     external fun getUiccMode(path: String): Int
+
+    /**
+     * Set the uicc mode
+     * @param path  The mode of configuration file
+     * @parammeaning: 0:vUICC ，1:eUICC
+     *
+     * @return int  0:Success , -1:error
+     */
+    external fun setUiccMode(mode: Int): Int
 
     /**
      * Get eid from eUICC/vUICC
