@@ -35,6 +35,8 @@ class JniInterface {
 
     external fun getUiccMode(path: String): Int
 
+    external fun setUiccMode(mode: Int): Int
+
     external fun getEId(eId: ByteArray, eIdLength: IntArray): Int
 
     external fun getProfiles(profile: ByteArray, profileLength: IntArray): Int
