@@ -20,6 +20,7 @@ import com.redteamobile.smart.agent.util.LogUtil
 import com.redteamobile.smart.agent.util.LooperUtil
 import com.redteamobile.smart.agent.util.RetryUtil
 import com.redteamobile.smart.agent.util.SharePrefSetting
+import kotlin.concurrent.thread
 
 class SlotMonitor {
 
@@ -186,6 +187,9 @@ class SlotMonitor {
         } else {
             DSI_STATE_CALL_IDLE
         }
+
+        Thread.sleep(3000)
+
         val intent = Intent(Constant.ACTION_NETWORK_STATE_CHANGED)
         intent.putExtra(Constant.TAG_NETWORK_STATE, networkState)
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent)

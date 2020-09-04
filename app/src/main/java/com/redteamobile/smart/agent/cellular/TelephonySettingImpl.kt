@@ -372,11 +372,13 @@ class TelephonySettingImpl() : TelephonySetting {
                         }
                     }
                 }
-
             }
         } else {
             netType = "UNKNOWN"
         }
+
+        LogUtil.i(TAG, "Network Type ====> $netType")
+
         return netType
     }
 
