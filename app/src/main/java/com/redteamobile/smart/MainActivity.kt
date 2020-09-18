@@ -1,11 +1,16 @@
 package com.redteamobile.smart
 
+import android.Manifest
 import android.content.*
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.IBinder
 import android.text.TextUtils
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.redteamobile.smart.agent.AgentService
@@ -25,6 +30,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private var eId = ByteArray(32)
     private var eIdLength: IntArray = IntArray(1)
     private var profileList = ArrayList<ProfileModel>()
+    private var isNeedCheck = true
+    private val PERMISSON_REQUESTCODE = 110
+    private val LOCATION_CODE = 1315
+    private val needPermissions = arrayOf<String>(Manifest.permission.READ_PHONE_STATE)
 
     private val broadcastReceiver = object : BroadcastReceiver() {
 
@@ -56,6 +65,60 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    fun checkPermissions(permissions: Array<String>) {
+        val needRequestPermissonList = findDeniedPermissions(permissions)
+        if (null != needRequestPermissonList && needRequestPermissonList.size > 0) {
+            ActivityCompat.requestPermissions(this,
+                needRequestPermissonList.toTypedArray(), PERMISSON_REQUESTCODE)
+        }
+    }
+
+    /**
+     * 获取权限集中需要申请权限的列表
+     * */
+    fun findDeniedPermissions(permissions: Array<String>): List<String> {
+        var needRequestPermissonList = ArrayList<String>()
+        for (perm in permissions) {
+            if (ContextCompat.checkSelfPermission(this,
+                    perm) != PackageManager.PERMISSION_GRANTED || ActivityCompat.shouldShowRequestPermissionRationale(
+                    this, perm)) {
+                needRequestPermissonList.add(perm)
+            }
+        }
+        return needRequestPermissonList
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, paramArrayOfInt: IntArray) {
+        when (requestCode) {
+            PERMISSON_REQUESTCODE -> if (!verifyPermissions(paramArrayOfInt)) {
+                isNeedCheck = false
+            }
+            LOCATION_CODE -> {
+                if (paramArrayOfInt.size > 0 && paramArrayOfInt[0] == PackageManager.PERMISSION_GRANTED) {
+                    // 权限被用户同意。
+
+                } else {
+                    // 权限被用户拒绝了。
+                    Toast.makeText(this@MainActivity, "定位权限被禁止，相关地图功能无法使用！", Toast.LENGTH_LONG).show()
+                }
+
+            }
+        }
+
+    }
+
+    /**
+     * 检测是否说有的权限都已经授权
+     */
+    fun verifyPermissions(grantResults: IntArray): Boolean {
+        for (result in grantResults) {
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                return false
+            }
+        }
+        return true
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -75,6 +138,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         val intent = Intent(this, AgentService::class.java)
         startService(intent)
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+        if (isNeedCheck) {
+            checkPermissions(needPermissions);
+        }
     }
 
     override fun onDestroy() {
