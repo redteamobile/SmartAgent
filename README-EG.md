@@ -1,2 +1,3 @@
 # Smart Agent Java version
-[中文文档] (https://github.com/redteamobile/SmartAgent/blob/master-smart-agent/README.md)
+
+[中文文档] (https://github.com/redteamobile/SmartAgent/blob/smart-agent-java-dev/README.md)
