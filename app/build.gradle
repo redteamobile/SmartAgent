@@ -54,5 +54,5 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation(name: 'library-release', ext: 'aar')
+    implementation(name: 'library-1.1-release', ext: 'aar')
 }
