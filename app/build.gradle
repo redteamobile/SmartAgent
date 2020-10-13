@@ -1,27 +1,26 @@
 apply plugin: 'com.android.application'
 
-apply plugin: 'kotlin-android'
-
-apply plugin: 'kotlin-android-extensions'
-
 android {
-    compileSdkVersion 28
+    signingConfigs {
+        platform {
+            storeFile file('../platform.keystore')
+            storePassword 'android'
+            keyAlias  'platform'
+            keyPassword 'android'
+        }
+    }
+
+    compileSdkVersion 30
+    buildToolsVersion "30.0.2"
+
     defaultConfig {
         applicationId "com.redteamobile.smart"
         minSdkVersion 22
-        targetSdkVersion 26
+        targetSdkVersion 30
         versionCode 1
-        versionName "android-euicc-agent-general_v0.0.0.6_android_staging_debug"
-        multiDexEnabled true
+        versionName "1.0"
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
-    signingConfigs {
-        platform {
-            keyAlias 'platform'
-            keyPassword 'android'
-            storeFile file('../platform.keystore')
-            storePassword 'android'
-        }
     }
 
     buildTypes {
@@ -33,6 +32,13 @@ android {
             signingConfig signingConfigs.platform
         }
     }
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "${project.name}_V${defaultConfig.versionName}_${variant.buildType.name}.apk"
+        }
+    }
+
     repositories {
         flatDir {
             dirs 'libs'
@@ -41,18 +47,17 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation(name: 'library-1.0.1-release', ext: 'aar')
     implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.core:core-ktx:1.0.2'
     implementation "androidx.recyclerview:recyclerview:1.1.0"
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'com.google.code.gson:gson:2.8.2'
-    implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.0.0'
-    testImplementation 'junit:junit:4.12'
     implementation("com.google.guava:guava:28.1-android")
-    implementation 'com.android.support:multidex:1.0.0'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation(name: 'library-1.1-release', ext: 'aar')
+    implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.0.0'
+//    implementation project(path: ':library')
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+
 }
