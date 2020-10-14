@@ -20,7 +20,7 @@ public class JniInterface {
     private IDispatcherService dispatcherService;
 
     public JniInterface(Context context) {
-        System.loadLibrary("bridge");
+        System.loadLibrary("agent_jni");
         this.telephonySetting = new TelephonySettingImpl(context);
         libraryService = new LibraryService(context);
     }
