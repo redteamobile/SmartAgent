@@ -1,5 +1,6 @@
 package com.redteamobile.smart;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -9,15 +10,16 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.redteamobile.smart.agent.AgentService;
 import com.redteamobile.smart.recycler.ProfileAdapter;
 import com.redteamobile.smart.recycler.ProfileModel;
+import com.redteamobile.smart.util.LogUtil;
 import com.redteamobile.smart.util.SharePrefSetting;
 
 import org.json.JSONArray;
@@ -26,7 +28,9 @@ import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 
+import androidx.core.app.ActivityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,25 +44,22 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private TextView imeiTv;
     private TextView appVersionTv;
     private TextView currentIccidTv;
-    private TextView startServiceTv;
-    private TextView stopServiceTv;
+    private TextView euiccMode;
+    private TextView vuiccMode;
     private TextView enable_provisioningTv;
     private TextView qa_finishTv;
 
     private AgentService agentService;
-    private byte[] eId = new byte[32];
-    private int[] eIdLength = new int[1];
-    private ArrayList<ProfileModel> profileList = new ArrayList();
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+    private final byte[] eId = new byte[32];
+    private final int[] eIdLength = new int[1];
+    private List<ProfileModel> profileList = new ArrayList();
+    private final int PERMISSON_REQUESTCODE = 110;
+    private String[] needPermissions = {Manifest.permission.READ_PHONE_STATE};
+    private int currentIccidIndex = -1;
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (Constant.ACTION_NETWORK_STATE_CHANGED.equals(intent.getAction())) {
-                int networkState = intent.getIntExtra(Constant.TAG_NETWORK_STATE, 0);
-                if (networkState == Constant.DSI_STATE_CALL_CONNECTED) {
-                    showData();
-                    parseProfiles();
-                }
-            } else if (Constant.ACTION_SERVICE_CONNECTED.equals(intent.getAction())) {
+            if (Constant.ACTION_NOTIFY_STATE.equals(intent.getAction())) {
                 showData();
                 parseProfiles();
             }
@@ -70,12 +71,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
         public void onServiceConnected(ComponentName name, IBinder service) {
             agentService = ((AgentService.MyBinder) service).getService();
             ProfileAdapter adapter = (ProfileAdapter) profileRecycler.getAdapter();
-            adapter.setAgentService(agentService);
+            if (adapter != null) {
+                adapter.setAgentService(agentService);
+            }
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-
         }
     };
 
@@ -83,30 +85,30 @@ public class MainActivity extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        checkPermmission();
         profileRecycler = findViewById(R.id.profileRecycler);
         enable_next_operationalTv = findViewById(R.id.enable_next_operationalTv);
         eidTv = findViewById(R.id.eidTv);
         imeiTv = findViewById(R.id.imeiTv);
         appVersionTv = findViewById(R.id.appVersionTv);
         currentIccidTv = findViewById(R.id.currentIccid);
-        startServiceTv = findViewById(R.id.startService);
-        stopServiceTv = findViewById(R.id.stopService);
+        euiccMode = findViewById(R.id.euiccMode);
+        vuiccMode = findViewById(R.id.vuiccMode);
         enable_provisioningTv = findViewById(R.id.enable_provisioningTv);
-        qa_finishTv = findViewById(R.id.qa_finishTv);
+        qa_finishTv = findViewById(R.id.deleteAllTv);
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         profileRecycler.setLayoutManager(linearLayoutManager);
         profileRecycler.setAdapter(new ProfileAdapter(profileList));
 
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Constant.ACTION_NETWORK_STATE_CHANGED);
-        intentFilter.addAction(Constant.ACTION_SERVICE_CONNECTED);
+        intentFilter.addAction(Constant.ACTION_NOTIFY_STATE);
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, intentFilter);
 
         enable_next_operationalTv.setOnClickListener(this);
-        startServiceTv.setOnClickListener(this);
-        stopServiceTv.setOnClickListener(this);
+        euiccMode.setOnClickListener(this);
+        vuiccMode.setOnClickListener(this);
         enable_provisioningTv.setOnClickListener(this);
         qa_finishTv.setOnClickListener(this);
 
@@ -122,13 +124,24 @@ public class MainActivity extends Activity implements View.OnClickListener {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
     }
 
+    private void checkPermmission() {
+        ActivityCompat.requestPermissions(this,
+                needPermissions, PERMISSON_REQUESTCODE);
+    }
+
+    private void updateModeUI() {
+        euiccMode.setEnabled(agentService.getUiccMode() != Constant.EUICC_MODE);
+        vuiccMode.setEnabled(agentService.getUiccMode() != Constant.VUICC_MODE);
+    }
+
     private void showData() {
         if (agentService == null) {
             return;
         }
+        updateModeUI();
         agentService.getEId(eId, eIdLength);
         String eid = new String(eId);
-        if (eid == null || TextUtils.isEmpty(eid)) {
+        if (TextUtils.isEmpty(eid)) {
             return;
         }
         eidTv.setText(eid);
@@ -140,20 +153,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private int[] profileLength = new int[1024];
 
     private void parseProfiles() {
-        Log.d(TAG, "parseProfiles");
         if (agentService == null) {
-            Log.e(TAG, "parseProfiles agentService is null");
+            Log.e(TAG, getString(R.string.agent_service_empty));
             return;
         }
         profileList.clear();
-        Log.d(TAG, "parseProfiles before getProfiles");
         agentService.getProfiles(profile, profileLength);
-        Log.d(TAG, "parseProfiles before jsonArray");
         byte[] jsonArray = new byte[this.profileLength[0]];
-        Log.d(TAG, "parseProfiles before arraycopy");
         System.arraycopy(this.profile, 0, jsonArray, 0, this.profileLength[0]);
         String json = new String(jsonArray, StandardCharsets.UTF_8);
-        Log.d(TAG, "parseProfiles json : " + json);
         if (TextUtils.isEmpty(json)) {
             return;
         }
@@ -182,6 +190,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             for (int i = 0; i < profileList.size(); i++) {
                 ProfileModel model = (ProfileModel) profileList.get(i);
                 if (model.getState() == 1) {
+                    currentIccidIndex = i;
                     currentIccidTv.setText(model.getIccid());
                     if (!isContains) {
                         SharePrefSetting.putCurrentIccId(model.getIccid());
@@ -195,40 +204,37 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public void onClick(View v) {
-        Log.e(TAG, "onClick profileList size :" + profileList.size());
         if (profileList.size() <= 0) {
             showData();
             parseProfiles();
             return;
         }
+        if (agentService == null) {
+            return;
+        }
         switch (v.getId()) {
-            case R.id.startService:
-            case R.id.enable_next_operationalTv:
-                for (int i = 0; i < profileList.size(); i++) {
-                    ProfileModel profileModel = profileList.get(i);
-                    if (profileModel.getType() == 2) {
-                        if (profileModel.getState() == 0) {
-                            if (agentService == null) {
-                                return;
-                            }
-                            agentService.enableProfile(profileModel.getIccid());
-                        }
-                    }
-                }
+            case R.id.euiccMode:
+                agentService.setEuiccMode();
+                updateModeUI();
+                Toast.makeText(MainActivity.this, getString(R.string.reboot_work), Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.stopService:
-                for (int i = 0; i < profileList.size(); i++) {
-                    ProfileModel profileModel = profileList.get(i);
-                    if (profileModel.getType() == 2) {
-                        if (profileModel.getState() == 1) {
-                            if (agentService == null) {
-                                return;
-                            }
-                            agentService.disableProfile(profileModel.getIccid());
-                        }
-                    }
+            case R.id.vuiccMode:
+                agentService.setVuiccMode();
+                updateModeUI();
+                Toast.makeText(MainActivity.this,  getString(R.string.reboot_work), Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.enable_next_operationalTv:
+                if (profileList.size() > 1) {
+                    currentIccidIndex = (++currentIccidIndex >= profileList.size()) ? 1 : currentIccidIndex;
                 }
+                agentService.enableProfile(profileList.get(currentIccidIndex).getIccid());
+
                 break;
             case R.id.enable_provisioningTv:
                 for (int i = 0; i < profileList.size(); i++) {
@@ -241,18 +247,21 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     }
                 }
                 break;
-            case R.id.qa_finishTv:
+            case R.id.deleteAllTv:
                 for (int i = 0; i < profileList.size(); i++) {
                     ProfileModel profileModel = profileList.get(i);
                     if (profileModel.getType() == 2) {
                         if (agentService == null) {
                             return;
                         }
+                        Log.e(TAG, "onClick: " + profileModel.getIccid());
                         agentService.deleteProfile(profileModel.getIccid());
                     }
                 }
                 break;
         }
     }
+
+
 }
 

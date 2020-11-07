@@ -11,8 +11,7 @@ import java.io.File;
 
 public class AssetManager {
 
-    private final static String TAG = "AssetManager";
-    private final String DEFAULT_ASSETS = "B200518021540844291_assets.der";
+    private static final String DEFAULT_ASSETS = "assets.der";
     private final String ASSETS = "rt_share_profile.der";
     private String cachePath;
     private String cacheFile;
@@ -20,7 +19,7 @@ public class AssetManager {
 
     public AssetManager(Context context) {
         super();
-        cachePath = FileUtil.getFilesDir(context).getAbsolutePath() + "/";
+        cachePath = FileUtil.getAppPath(context) + "/";
         cacheFile = cachePath + ASSETS;
         this.context = context;
     }

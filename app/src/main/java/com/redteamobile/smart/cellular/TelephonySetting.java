@@ -20,7 +20,7 @@ public interface TelephonySetting {
 
     String getImsi(int subId);
 
-    void initIccid();
+    String initIccid();
 
     boolean isSimReady(int slotId);
 
@@ -37,4 +37,5 @@ public interface TelephonySetting {
     boolean configureApn(String apn, String mccMnc);
 
     boolean clearApn();
+
 }

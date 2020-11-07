@@ -6,17 +6,17 @@ import android.content.Intent;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
+import com.redteamobile.smart.Constant;
 import com.redteamobile.smart.util.SharePrefSetting;
 
-public class ServiceStateReceiver extends BroadcastReceiver {
 
-    private static final String TAG = "ServiceStateReceiver";
-    private final static String ACTION_SERVICE_STATE = "android.intent.action.SERVICE_STATE";
+public class ServiceStateReceiver extends BroadcastReceiver {
+    private static final String TAG = ServiceStateReceiver.class.getSimpleName();
     private TelephonyManager telephonyManager;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (!ACTION_SERVICE_STATE.equals(intent.getAction())) {
+        if (!Constant.ACTION_SERVICE_STATE.equals(intent.getAction())) {
             return;
         }
         if (context != null) {
@@ -41,7 +41,6 @@ public class ServiceStateReceiver extends BroadcastReceiver {
         if (mcc > 0 && mcc != lastMcc) {
             SharePrefSetting.putMcc(mcc);
         }
-
         int currentMnc = Integer.parseInt(mccMnc.substring(3));
         int lastMnc = SharePrefSetting.getMnc();
         if (currentMnc >= 0 && currentMnc != lastMnc) {

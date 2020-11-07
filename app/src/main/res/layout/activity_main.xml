@@ -52,7 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="EID"
+                android:text="@string/EID"
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
 
@@ -81,7 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="终端软件版本"
+                android:text="@string/app_version"
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
 
@@ -111,7 +111,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="在用码号"
+                android:text="@string/current_iccid"
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
 
@@ -133,29 +133,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <TextView
-            android:id="@+id/startService"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/button_bg_state"
-            android:gravity="center"
-            android:padding="15dp"
-            android:text="开始"
-            android:textColor="@android:color/white"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/stopService"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/button_bg_state"
-            android:gravity="center"
-            android:padding="15dp"
-            android:text="停止"
-            android:textColor="@android:color/white"
-            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/enable_provisioningTv"
@@ -165,7 +142,7 @@
             android:background="@drawable/button_bg_state"
             android:gravity="center"
             android:padding="15dp"
-            android:text="启用种子号"
+            android:text="@string/enable_provisioning"
             android:textColor="@android:color/white"
             android:textSize="18sp" />
 
@@ -177,20 +154,42 @@
             android:background="@drawable/button_bg_state"
             android:gravity="center"
             android:padding="15dp"
-            android:text="切换下一站业务号"
+            android:text="@string/enable_next_operational_profile"
             android:textColor="@android:color/white"
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/qa_finishTv"
+            android:id="@+id/deleteAllTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:background="@drawable/button_bg_state"
-            android:enabled="false"
             android:gravity="center"
             android:padding="15dp"
-            android:text="删除所有业务号"
+            android:text="@string/delete_all_operational_profile"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+        <TextView
+            android:id="@+id/euiccMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/button_bg_state"
+            android:gravity="center"
+            android:padding="15dp"
+            android:text="@string/euicc_mode"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/vuiccMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/button_bg_state"
+            android:gravity="center"
+            android:padding="15dp"
+            android:text="@string/vuicc_mode"
             android:textColor="@android:color/white"
             android:textSize="18sp" />
 

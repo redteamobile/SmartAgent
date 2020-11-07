@@ -16,6 +16,7 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.redteamobile.smart.util.LogUtil;
 import com.redteamobile.smart.util.SharePrefSetting;
 
 import java.lang.reflect.InvocationTargetException;
@@ -56,39 +57,26 @@ public class TelephonySettingImpl implements TelephonySetting {
         try {
             Method method = TelephonyManager.class.getDeclaredMethod("isMultiSimEnabled");
             isMultiSim = (boolean) method.invoke(telephonyManager);
-            Log.d(TAG, "isMultiSimEnabled:" + isMultiSim);
+            LogUtil.d(TAG, "isMultiSimEnabled:" + isMultiSim);
         } catch (NoSuchMethodException e) {
-            Log.e(TAG, "Reflection failed", e);
-        } catch (IllegalAccessException e) {
+        } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
-            Log.e(TAG, "Reflection failed", e);
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-            Log.e(TAG, "Reflection failed", e);
         }
 
     }
 
     @Override
     public String getImei() {
-        String imei = null;
+        String imei = "";
         try {
             Method getImei = TelephonyManager.class.getDeclaredMethod("getImei", Integer.TYPE);
-            if (getImei != null) {
-                imei = (String) getImei.invoke(this.telephonyManager, 0);
-            }
-        } catch (NoSuchMethodException e) {
-            Log.e(TAG, "Reflection exception", e);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            Log.e(TAG, "Reflection exception", e);
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-            Log.e(TAG, "Reflection exception", e);
+            imei = (String) getImei.invoke(this.telephonyManager, 0);
+        } catch (Exception e) {
+            Log.e(TAG, "Reflection exception" + e.getMessage());
         }
-        Log.d(TAG, "imei :" + imei);
         return imei;
     }
+
 
     @Override
     public boolean getDataEnabled(int subId) {
@@ -96,14 +84,9 @@ public class TelephonySettingImpl implements TelephonySetting {
         try {
             Method method = TelephonyManager.class.getDeclaredMethod("getDataEnabled", Integer.TYPE);
             result = (boolean) method.invoke(this.telephonyManager, subId);
-        } catch (NoSuchMethodException var10) {
-            Log.e(TAG, "Reflection failed", (Throwable) var10);
-        } catch (IllegalAccessException var11) {
-            Log.e(TAG, "Reflection failed", (Throwable) var11);
-        } catch (InvocationTargetException var12) {
-            Log.e(TAG, "Reflection failed", (Throwable) var12);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
         }
-        Log.d(TAG, "getDataEnabled subId :" + subId + ", returns :" + result);
         return result;
     }
 
@@ -113,12 +96,8 @@ public class TelephonySettingImpl implements TelephonySetting {
             Method method = TelephonyManager.class
                     .getDeclaredMethod("setDataEnabled", Integer.TYPE, Boolean.TYPE);
             method.invoke(telephonyManager, subId, enable);
-        } catch (NoSuchMethodException var10) {
-            Log.e(TAG, "Reflection failed", (Throwable) var10);
-        } catch (IllegalAccessException var11) {
-            Log.e(TAG, "Reflection failed", (Throwable) var11);
-        } catch (InvocationTargetException var12) {
-            Log.e(TAG, "Reflection failed", (Throwable) var12);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
         }
     }
 
@@ -134,12 +113,8 @@ public class TelephonySettingImpl implements TelephonySetting {
                                 Integer.TYPE);
                 result = (boolean) method
                         .invoke(this.telephonyManager, this.resolver, "data_roaming", subId);
-            } catch (NoSuchMethodException var10) {
-                Log.e(TAG, "Reflection failed", (Throwable) var10);
-            } catch (IllegalAccessException var11) {
-                Log.e(TAG, "Reflection failed", (Throwable) var11);
-            } catch (InvocationTargetException var12) {
-                Log.e(TAG, "Reflection failed", (Throwable) var12);
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
             }
         }
         return result;
@@ -152,20 +127,16 @@ public class TelephonySettingImpl implements TelephonySetting {
             Settings.Global.putInt(this.resolver,
                     isMultiSim ? Settings.Global.DATA_ROAMING + subId : Settings.Global.DATA_ROAMING,
                     roaming);
-        } catch (SecurityException var13) {
-            Log.e(TAG, "Permission denied", (Throwable) var13);
+        } catch (SecurityException e) {
+            e.printStackTrace();
         }
 
         try {
-            Method method = SubscriptionManager.class
+            @SuppressLint("DiscouragedPrivateApi") Method method = SubscriptionManager.class
                     .getDeclaredMethod("setDataRoaming", Integer.TYPE, Integer.TYPE);
             method.invoke(this.subscriptionManager, roaming, subId);
-        } catch (NoSuchMethodException var10) {
-            Log.e(TAG, "Reflection failed", (Throwable) var10);
-        } catch (IllegalAccessException var11) {
-            Log.e(TAG, "Reflection failed", (Throwable) var11);
-        } catch (InvocationTargetException var12) {
-            Log.e(TAG, "Reflection failed", (Throwable) var12);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
         }
     }
 
@@ -188,15 +159,8 @@ public class TelephonySettingImpl implements TelephonySetting {
             if (subIdArray != null && subIdArray.length > 0) {
                 return subIdArray[0];
             }
-        } catch (NoSuchMethodException e) {
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
-            Log.e(TAG, "Reflection failed", e);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            Log.e(TAG, "Reflection failed", e);
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-            Log.e(TAG, "Reflection failed", e);
         }
         return -1;
     }
@@ -207,27 +171,24 @@ public class TelephonySettingImpl implements TelephonySetting {
         try {
             Method method = TelephonyManager.class.getDeclaredMethod("getSubscriberId", Integer.TYPE);
             imsi = (String) method.invoke(this.telephonyManager, subId);
-        } catch (NoSuchMethodException var4) {
-            Log.e(TAG, "Reflection failed", (Throwable) var4);
-        } catch (IllegalAccessException var5) {
-            Log.e(TAG, "Reflection failed", (Throwable) var5);
-        } catch (InvocationTargetException var6) {
-            Log.e(TAG, "Reflection failed", (Throwable) var6);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
         }
         return imsi;
     }
 
-    @SuppressLint("MissingPermission")
     @Override
-    public void initIccid() {
+    public String initIccid() {
         String iccId = telephonyManager.getSimSerialNumber();
-        SubscriptionInfo info = subscriptionManager.getActiveSubscriptionInfoForSimSlotIndex(0);
-        if (info != null) {
-            iccId = info.getIccId();
-        }
-        if (!TextUtils.isEmpty(iccId) && TextUtils.equals(iccId, SharePrefSetting.getCurrentIccId())) {
+            SubscriptionInfo info = subscriptionManager.getActiveSubscriptionInfoForSimSlotIndex(0);
+            if (info != null) {
+                // 在插入卡片的时候多数情况会不对
+                iccId = info.getIccId();
+            }
+        if (!TextUtils.isEmpty(iccId) && !TextUtils.equals(iccId, SharePrefSetting.getCurrentIccId())) {
             SharePrefSetting.putCurrentIccId(iccId);
         }
+        return iccId;
     }
 
     @Override
@@ -236,12 +197,8 @@ public class TelephonySettingImpl implements TelephonySetting {
         try {
             Method method = TelephonyManager.class.getDeclaredMethod("getSimState", Integer.TYPE);
             simState = (int) method.invoke(this.telephonyManager, slotId);
-        } catch (NoSuchMethodException var11) {
-            Log.e(TAG, "Reflection failed", (Throwable) var11);
-        } catch (IllegalAccessException var12) {
-            Log.e(TAG, "Reflection failed", (Throwable) var12);
-        } catch (InvocationTargetException var13) {
-            Log.e(TAG, "Reflection failed", (Throwable) var13);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return simState == 5;
     }
@@ -257,12 +214,8 @@ public class TelephonySettingImpl implements TelephonySetting {
         try {
             Method method = SubscriptionManager.class.getDeclaredMethod("getDefaultDataSubId");
             subId = (int) method.invoke(this.subscriptionManager);
-        } catch (NoSuchMethodException var9) {
-            Log.e(TAG, "Reflection failed", (Throwable) var9);
-        } catch (IllegalAccessException var10) {
-            Log.e(TAG, "Reflection failed", (Throwable) var10);
-        } catch (InvocationTargetException var11) {
-            Log.e(TAG, "Reflection failed", (Throwable) var11);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return subId;
     }
@@ -276,12 +229,8 @@ public class TelephonySettingImpl implements TelephonySetting {
             Method method = SubscriptionManager.class
                     .getDeclaredMethod("setDefaultDataSubId", Integer.TYPE);
             method.invoke(this.subscriptionManager, subId);
-        } catch (NoSuchMethodException var9) {
-            Log.e(TAG, "Reflection failed", (Throwable) var9);
-        } catch (IllegalAccessException var10) {
-            Log.e(TAG, "Reflection failed", (Throwable) var10);
-        } catch (InvocationTargetException var11) {
-            Log.e(TAG, "Reflection failed", (Throwable) var11);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -291,12 +240,8 @@ public class TelephonySettingImpl implements TelephonySetting {
             @SuppressLint("SoonBlockedPrivateApi") Method method = SubscriptionManager.class
                     .getDeclaredMethod("setDisplayName", String.class, Integer.TYPE);
             method.invoke(this.subscriptionManager, name, subId);
-        } catch (NoSuchMethodException var10) {
-            Log.e(TAG, "Reflection failed", (Throwable) var10);
-        } catch (IllegalAccessException var11) {
-            Log.e(TAG, "Reflection failed", (Throwable) var11);
-        } catch (InvocationTargetException var12) {
-            Log.e(TAG, "Reflection failed", (Throwable) var12);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

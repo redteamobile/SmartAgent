@@ -16,7 +16,7 @@ import java.util.List;
 public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private AgentService agentService;
-    private List profileList;
+    private final List<ProfileModel> profileList;
 
     @NonNull
     @Override
@@ -39,7 +39,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return profileList.size();
     }
 
-    public ProfileAdapter(List profileList) {
+    public ProfileAdapter(List<ProfileModel> profileList) {
         super();
         this.profileList = profileList;
     }
@@ -52,18 +52,13 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         public void bind(final ProfileModel profileModel) {
             View view = this.itemView;
-            boolean var3 = false;
-            boolean var4 = false;
             TextView tv_vitemIccid = (TextView) view.findViewById(R.id.itemIccid);
             tv_vitemIccid.setText((CharSequence) profileModel.getIccid());
             TextView tv_itemEnableBtn = (TextView) view.findViewById(R.id.itemEnableBtn);
             if (profileModel.getState() == 0) {
-                tv_itemEnableBtn.setText((CharSequence) "启用");
+                tv_itemEnableBtn.setText(view.getResources().getString(R.string.enable_profile));
             } else {
-                tv_itemEnableBtn.setText((CharSequence) "禁用");
-            }
-
-            if (profileModel.getType() == 0) {
+                tv_itemEnableBtn.setText((CharSequence) view.getResources().getString(R.string.disable_profile));
             }
 
             tv_itemEnableBtn.setOnClickListener(new View.OnClickListener() {
@@ -73,11 +68,12 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         if (profileModel.getState() == 0) {
                             profileModel.setState(1);
                             agentService.enableProfile(profileModel.getIccid());
+
                         } else {
                             profileModel.setState(0);
                             agentService.disableProfile(profileModel.getIccid());
+
                         }
-                        notifyDataSetChanged();
                     }
                 }
             });

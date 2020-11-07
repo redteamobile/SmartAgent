@@ -1,3 +1,17 @@
 <resources>
-    <string name="app_name">SmartAgent</string>
+    <string name="app_name">Agent</string>
+    <string name="reboot_work">重启生效</string>
+    <string name="agent_service_empty">AgentService is null</string>
+    <string name="provisioning_profile">种子号</string>
+    <string name="ICCID">ICCID</string>
+    <string name="enable_profile">启用</string>
+    <string name="disable_profile">禁用</string>
+    <string name="EID">EID</string>
+    <string name="app_version">终端软件版本</string>
+    <string name="current_iccid">在用码号</string>
+    <string name="enable_provisioning">启用种子号</string>
+    <string name="enable_next_operational_profile">切换下一业务号</string>
+    <string name="delete_all_operational_profile">删除所有业务号</string>
+    <string name="euicc_mode">EUICC模式</string>
+    <string name="vuicc_mode">VUICC模式</string>
 </resources>

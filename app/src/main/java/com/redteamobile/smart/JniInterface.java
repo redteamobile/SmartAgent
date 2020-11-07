@@ -1,28 +1,35 @@
 package com.redteamobile.smart;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.RemoteException;
+import android.util.Log;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.redteamobile.library.code.service.LibraryService;
 import com.redteamobile.monitor.IDispatcherService;
 import com.redteamobile.smart.agent.AgentService;
 import com.redteamobile.smart.cellular.TelephonySetting;
 import com.redteamobile.smart.cellular.TelephonySettingImpl;
+import com.redteamobile.smart.util.LogUtil;
 import com.redteamobile.smart.util.SharePrefSetting;
 
 import java.util.concurrent.TimeUnit;
 
 public class JniInterface {
 
-    private static final String TAG = "JniInterface";
+    private static final String TAG = JniInterface.class.getSimpleName();
     private TelephonySetting telephonySetting;
     private LibraryService libraryService;
     private IDispatcherService dispatcherService;
+    private Context mContext;
 
     public JniInterface(Context context) {
         System.loadLibrary("agent_jni");
         this.telephonySetting = new TelephonySettingImpl(context);
         libraryService = new LibraryService(context);
+        mContext = context;
     }
 
     public void setService(IDispatcherService dispatcherService) {
@@ -30,8 +37,8 @@ public class JniInterface {
     }
 
     public final native int logPrintString(int level, String log);
-
-    public final native int main(String path);
+    public final native int init(String path);
+    public final native int main();
 
     public final native int networkUpdateState(int networkState);
 
@@ -77,6 +84,11 @@ public class JniInterface {
         return "";
     }
 
+    public void notifyCardState() {
+        LocalBroadcastManager.getInstance(mContext)
+                .sendBroadcast(new Intent(Constant.ACTION_NOTIFY_STATE));
+    }
+
     public int openChannel() {
         return libraryService.openChannel();
     }
@@ -104,8 +116,9 @@ public class JniInterface {
     }
 
     public String getCurrentIccid() {
-        telephonySetting.initIccid();
-        return SharePrefSetting.getCurrentIccId();
+        // 注意：如果获取系统的iccid不准确，那么返回null，交给native agent自己去获取当前使用的card，但实际上我们应该信任系统
+//        telephonySetting.initIccid();
+        return null;
     }
 
     public String getCurrentImsi() {

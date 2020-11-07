@@ -21,12 +21,7 @@ public class SharePrefSetting {
         if (INSTANCE != null) {
             return INSTANCE;
         }
-        int code = Context.MODE_PRIVATE;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            code = Context.MODE_MULTI_PROCESS;
-        }
-        code = code | Context.MODE_APPEND;
-        INSTANCE = App.mContext.getSharedPreferences(PREF_NAME, code);
+        INSTANCE = App.mContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         return INSTANCE;
     }
 
