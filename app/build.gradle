@@ -28,13 +28,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.platform
         }
     }
 
     android.applicationVariants.all { variant ->
         variant.outputs.all {
-            outputFileName = "${project.name}_V${defaultConfig.versionName}_${variant.buildType.name}.apk"
+            outputFileName = "SmartAgent_v${defaultConfig.versionName}_${variant.buildType.name}.apk"
         }
     }
 
@@ -54,7 +56,6 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation("com.google.guava:guava:28.1-android")
     implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.0.0'
-//    implementation project(path: ':library')
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
