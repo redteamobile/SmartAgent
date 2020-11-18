@@ -39,7 +39,7 @@ public class SlotMonitor {
     private LooperUtil looperUtil;
     private TelephonySetting telephonySetting;
     private TelephonyManager telephonyManager;
-    private DefaultPhoneStateListener phoneStateListener;
+    private SlotMonitor.DefaultPhoneStateListener phoneStateListener;
     private boolean changedBroadcastRegistered;
 
     private BroadcastReceiver simStateChangedReceiver = new BroadcastReceiver() {
@@ -80,7 +80,7 @@ public class SlotMonitor {
         if (phoneStateListener != null) {
             unregisterPhoneStateListener();
         }
-        phoneStateListener = new DefaultPhoneStateListener();
+        phoneStateListener = new SlotMonitor.DefaultPhoneStateListener();
         telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
     }
 

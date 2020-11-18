@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="wrap_content"
     android:background="@android:color/transparent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:orientation="vertical">
 
     <TextView
-        android:textColor="#a0a0a0a0"
         android:id="@+id/itemIsProvisioning"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
+        android:textColor="#a0a0a0a0"
         tools:text="@string/provisioning_profile" />
 
     <LinearLayout
@@ -34,13 +34,13 @@
 
         <TextView
             android:id="@+id/itemIccid"
-            tools:text="89860317422046236431"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="right"
             android:textColor="@android:color/black"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            tools:text="89860317422046236431" />
 
         <TextView
             android:id="@+id/itemEnableBtn"

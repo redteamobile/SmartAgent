@@ -1,9 +1,11 @@
 package com.redteamobile.smart.cellular;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -15,6 +17,8 @@ import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.core.app.ActivityCompat;
 
 import com.redteamobile.smart.util.LogUtil;
 import com.redteamobile.smart.util.SharePrefSetting;
@@ -45,6 +49,7 @@ public class TelephonySettingImpl implements TelephonySetting {
     private ConnectivityManager connectivityManager;
     private ContentResolver resolver;
     private boolean isMultiSim;
+    private Context context;
 
     public TelephonySettingImpl(Context context) {
         telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
@@ -53,7 +58,7 @@ public class TelephonySettingImpl implements TelephonySetting {
         subscriptionManager = SubscriptionManager.from(context);
         resolver = context.getContentResolver();
         isMultiSim = false;
-
+        this.context = context;
         try {
             Method method = TelephonyManager.class.getDeclaredMethod("isMultiSimEnabled");
             isMultiSim = (boolean) method.invoke(telephonyManager);
@@ -180,7 +185,18 @@ public class TelephonySettingImpl implements TelephonySetting {
     @Override
     public String initIccid() {
         String iccId = telephonyManager.getSimSerialNumber();
-            SubscriptionInfo info = subscriptionManager.getActiveSubscriptionInfoForSimSlotIndex(0);
+
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return null;
+        }
+        SubscriptionInfo info = subscriptionManager.getActiveSubscriptionInfoForSimSlotIndex(0);
             if (info != null) {
                 // 在插入卡片的时候多数情况会不对
                 iccId = info.getIccId();

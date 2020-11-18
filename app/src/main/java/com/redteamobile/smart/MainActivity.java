@@ -1,6 +1,7 @@
 package com.redteamobile.smart;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -19,7 +20,6 @@ import android.widget.Toast;
 import com.redteamobile.smart.agent.AgentService;
 import com.redteamobile.smart.recycler.ProfileAdapter;
 import com.redteamobile.smart.recycler.ProfileModel;
-import com.redteamobile.smart.util.LogUtil;
 import com.redteamobile.smart.util.SharePrefSetting;
 
 import org.json.JSONArray;
@@ -39,15 +39,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     private static final String TAG = "MainActivity";
     private RecyclerView profileRecycler;
-    private TextView enable_next_operationalTv;
+    private TextView enableNextTv;
     private TextView eidTv;
     private TextView imeiTv;
     private TextView appVersionTv;
     private TextView currentIccidTv;
     private TextView euiccMode;
     private TextView vuiccMode;
-    private TextView enable_provisioningTv;
-    private TextView qa_finishTv;
+    private TextView enableProTv;
+    private TextView finishTv;
 
     private AgentService agentService;
     private final byte[] eId = new byte[32];
@@ -87,15 +87,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_main);
         checkPermmission();
         profileRecycler = findViewById(R.id.profileRecycler);
-        enable_next_operationalTv = findViewById(R.id.enable_next_operationalTv);
+        enableNextTv = findViewById(R.id.enable_next_operationalTv);
         eidTv = findViewById(R.id.eidTv);
         imeiTv = findViewById(R.id.imeiTv);
         appVersionTv = findViewById(R.id.appVersionTv);
         currentIccidTv = findViewById(R.id.currentIccid);
         euiccMode = findViewById(R.id.euiccMode);
         vuiccMode = findViewById(R.id.vuiccMode);
-        enable_provisioningTv = findViewById(R.id.enable_provisioningTv);
-        qa_finishTv = findViewById(R.id.deleteAllTv);
+        enableProTv = findViewById(R.id.enable_provisioningTv);
+        finishTv = findViewById(R.id.deleteAllTv);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -106,11 +106,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
         intentFilter.addAction(Constant.ACTION_NOTIFY_STATE);
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, intentFilter);
 
-        enable_next_operationalTv.setOnClickListener(this);
+        enableNextTv.setOnClickListener(this);
         euiccMode.setOnClickListener(this);
         vuiccMode.setOnClickListener(this);
-        enable_provisioningTv.setOnClickListener(this);
-        qa_finishTv.setOnClickListener(this);
+        enableProTv.setOnClickListener(this);
+        finishTv.setOnClickListener(this);
 
         Intent intent = new Intent(this, AgentService.class);
         startService(intent);
@@ -208,6 +208,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         super.onResume();
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         if (profileList.size() <= 0) {
@@ -220,12 +221,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
         switch (v.getId()) {
             case R.id.euiccMode:
-                agentService.setEuiccMode();
+                agentService.setUiccMode(Constant.EUICC_MODE);
                 updateModeUI();
                 Toast.makeText(MainActivity.this, getString(R.string.reboot_work), Toast.LENGTH_SHORT).show();
                 break;
             case R.id.vuiccMode:
-                agentService.setVuiccMode();
+                agentService.setUiccMode(Constant.VUICC_MODE);
                 updateModeUI();
                 Toast.makeText(MainActivity.this,  getString(R.string.reboot_work), Toast.LENGTH_SHORT).show();
                 break;

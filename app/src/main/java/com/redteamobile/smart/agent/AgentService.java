@@ -16,8 +16,6 @@ import android.graphics.Color;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
-import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -26,8 +24,9 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.redteamobile.monitor.IDispatcherService;
 import com.redteamobile.smart.Constant;
-import com.redteamobile.smart.JniInterface;
 import com.redteamobile.smart.R;
+import com.redteamobile.smart.external.UiccExternal;
+import com.redteamobile.smart.UiccManger;
 import com.redteamobile.smart.util.AssetManager;
 import com.redteamobile.smart.util.FileUtil;
 import com.redteamobile.smart.util.LogUtil;
@@ -39,15 +38,15 @@ import java.util.concurrent.CountDownLatch;
 import static com.redteamobile.smart.Constant.ACTION_BOOTSTRAP_READY;
 import static com.redteamobile.smart.Constant.ACTION_NETWORK_STATE_CHANGED;
 
-public class AgentService extends Service {
+public class AgentService extends Service implements UiccExternal {
 
     private static final String TAG = "AgentService";
     private IDispatcherService dispatcherService = null;
-    private JniInterface jniInterface;
+    private UiccManger uiccManager;
     private SlotMonitor slotMonitor;
     private final LooperUtil looperUtil = new LooperUtil();
     private String storagePath;
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (ACTION_NETWORK_STATE_CHANGED.equals(intent.getAction())) {
@@ -59,15 +58,15 @@ public class AgentService extends Service {
         }
     };
 
-    private ServiceConnection serviceConnection = new ServiceConnection() {
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             dispatcherService = IDispatcherService.Stub.asInterface(service);
             monitorReady.countDown();
             if (dispatcherService != null) {
-                jniInterface.setService(dispatcherService);
+                uiccManager.setService(dispatcherService);
             }
-            initJniInterface();
+            runAgentMain();
         }
 
         @Override
@@ -79,7 +78,7 @@ public class AgentService extends Service {
             } else {
                 Toast.makeText(
                         AgentService.this,
-                        "Monitor uninstalled, please restart.",
+                        getResources().getString(R.string.monitor_uninstall),
                         Toast.LENGTH_LONG
                 ).show();
                 new RetryUtil(looperUtil.getLooper(), new Runnable() {
@@ -105,23 +104,24 @@ public class AgentService extends Service {
     }
 
     private void initAgent() {
-        jniInterface = new JniInterface(this);
+        uiccManager = UiccManger.getInstance(this);
         storagePath = FileUtil.getAppPath(this);
-        jniInterface.init(storagePath);
+        uiccManager.init(storagePath);
         int uiccMode = getUiccMode();
         LogUtil.e(TAG, "uiccMode: " + uiccMode);
         if (uiccMode == Constant.EUICC_MODE) {
-            initJniInterface();
+            runAgentMain();
         } else if (uiccMode == Constant.VUICC_MODE) {
             bindService();
         }
     }
 
-    private void initJniInterface() {
+    // Delay calling jni main methods, etc.
+    private void runAgentMain() {
         new RetryUtil(looperUtil.getLooper(), new Runnable() {
             @Override
             public void run() {
-                jniInterface.main();
+                uiccManager.main();
                 slotMonitor = new SlotMonitor(getApplicationContext());
                 slotMonitor.startMonitor();
                 LocalBroadcastManager.getInstance(AgentService.this)
@@ -143,48 +143,49 @@ public class AgentService extends Service {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
     }
 
-    private void networkUpdateState(int state) {
-        jniInterface.networkUpdateState(state);
+    @Override
+    public int networkUpdateState(int networkState) {
+        return uiccManager.networkUpdateState(networkState);
     }
 
-    public String getImei() {
-        return jniInterface.getImei();
-    }
-
-    public int getEId(byte[] eId, int[] eIdLength) {
-        return jniInterface.getEId(eId, eIdLength);
-    }
-
-    public final int getProfiles(byte[] profile, int[] profileLength) {
-        return jniInterface.getProfiles(profile, profileLength);
-    }
-
-    public int deleteProfile(String iccid) {
-        return jniInterface.deleteProfile(iccid);
-    }
-
-    public int enableProfile(String iccid) {
-        return jniInterface.enableProfile(iccid);
-    }
-
-    public int disableProfile(final String iccid) {
-        Log.e(TAG, "disableProfile: " + iccid);
-        return jniInterface.disableProfile(iccid);
-    }
-
-    public void setVuiccMode() {
-        jniInterface.setUiccMode(Constant.VUICC_MODE);
-    }
-
-    public void setEuiccMode() {
-        jniInterface.setUiccMode(Constant.EUICC_MODE);
-    }
-
+    @Override
     public int getUiccMode() {
-        if (!TextUtils.isEmpty(storagePath)) {
-            return jniInterface.getUiccMode(storagePath);
-        }
-        return Constant.UNKNOWN_MODE;
+        return uiccManager.getUiccMode();
+    }
+
+    @Override
+    public int setUiccMode(int mode) {
+        return uiccManager.setUiccMode(mode);
+    }
+
+    @Override
+    public int getEId(byte[] eId, int[] eIdLength) {
+        return uiccManager.getEId(eId, eIdLength);
+    }
+
+    @Override
+    public final int getProfiles(byte[] profile, int[] profileLength) {
+        return uiccManager.getProfiles(profile, profileLength);
+    }
+
+    @Override
+    public String getImei() {
+        return uiccManager.getImei();
+    }
+
+    @Override
+    public int deleteProfile(String iccid) {
+        return uiccManager.deleteProfile(iccid);
+    }
+
+    @Override
+    public int enableProfile(String iccid) {
+        return uiccManager.enableProfile(iccid);
+    }
+
+    @Override
+    public int disableProfile(final String iccid) {
+        return uiccManager.disableProfile(iccid);
     }
 
     public class MyBinder extends Binder {
@@ -195,7 +196,7 @@ public class AgentService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        return new MyBinder();
+        return new AgentService.MyBinder();
     }
 
     @Override
@@ -223,8 +224,8 @@ public class AgentService extends Service {
     //Android O 启动需要前台服务
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void startOForeground() {
-        String NOTIFICATION_CHANNEL_ID = "com.redteamobile.smart";
-        String channelName = "Smart Background Service";
+        String NOTIFICATION_CHANNEL_ID = getString(R.string.channel_id);
+        String channelName = getString(R.string.channel_name);
         NotificationChannel chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_NONE);
         chan.setLightColor(Color.RED);
         chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
@@ -234,7 +235,7 @@ public class AgentService extends Service {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
         Notification notification = notificationBuilder.setOngoing(true)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("App is running in background")
+                .setContentTitle(getString(R.string.notify_title))
                 .setPriority(NotificationManager.IMPORTANCE_MIN)
                 .setCategory(Notification.CATEGORY_SERVICE)
                 .build();

@@ -18,7 +18,8 @@
     <!--Required by clearApn(), setDefaultDataSubId()-->
     <uses-permission android:name="android.permission.WRITE_APN_SETTINGS"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.com.permission.ACCESS_RBOOK_SERVIC"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="redteamobile.permission.ACCESS_RBOOK_SERVIC"/>
     <application
         android:name=".App"
         android:allowBackup="true"

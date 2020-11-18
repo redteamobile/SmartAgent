@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.redteamobile.smart.BuildConfig;
 
-
 public class LogUtil {
 
     private static final String TAG = LogUtil.class.getSimpleName();

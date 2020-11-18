@@ -3,7 +3,6 @@ package com.redteamobile.smart.util;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
 
 import com.redteamobile.smart.App;
 
@@ -21,7 +20,7 @@ public class SharePrefSetting {
         if (INSTANCE != null) {
             return INSTANCE;
         }
-        INSTANCE = App.mContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        INSTANCE = App.context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         return INSTANCE;
     }
 
