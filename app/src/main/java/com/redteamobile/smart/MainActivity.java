@@ -17,6 +17,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.redteamobile.smart.agent.AgentService;
 import com.redteamobile.smart.recycler.ProfileAdapter;
 import com.redteamobile.smart.recycler.ProfileModel;
@@ -29,11 +34,6 @@ import org.json.JSONObject;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.core.app.ActivityCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
@@ -221,6 +221,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
         switch (v.getId()) {
             case R.id.euiccMode:
+                // 需要插入EUICC卡
                 agentService.setUiccMode(Constant.EUICC_MODE);
                 updateModeUI();
                 Toast.makeText(MainActivity.this, getString(R.string.reboot_work), Toast.LENGTH_SHORT).show();

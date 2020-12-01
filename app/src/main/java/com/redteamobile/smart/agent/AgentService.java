@@ -25,8 +25,8 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.redteamobile.monitor.IDispatcherService;
 import com.redteamobile.smart.Constant;
 import com.redteamobile.smart.R;
-import com.redteamobile.smart.external.UiccExternal;
 import com.redteamobile.smart.UiccManger;
+import com.redteamobile.smart.external.UiccExternal;
 import com.redteamobile.smart.util.AssetManager;
 import com.redteamobile.smart.util.FileUtil;
 import com.redteamobile.smart.util.LogUtil;
@@ -196,7 +196,7 @@ public class AgentService extends Service implements UiccExternal {
 
     @Override
     public IBinder onBind(Intent intent) {
-        return new AgentService.MyBinder();
+        return new MyBinder();
     }
 
     @Override

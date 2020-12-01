@@ -49,7 +49,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation(name: 'library-1.0.2-release', ext: 'aar')
+    implementation(name: 'library-1.0.6-release', ext: 'aar')
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation "androidx.recyclerview:recyclerview:1.1.0"
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'

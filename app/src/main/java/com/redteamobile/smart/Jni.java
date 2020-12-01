@@ -1,17 +1,8 @@
 package com.redteamobile.smart;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.RemoteException;
 
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
-import com.redteamobile.smart.agent.AgentService;
-import com.redteamobile.smart.cellular.TelephonySetting;
-import com.redteamobile.smart.cellular.TelephonySettingImpl;
 import com.redteamobile.smart.util.SharePrefSetting;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * 包含native方法声明以及C调用的java方法；

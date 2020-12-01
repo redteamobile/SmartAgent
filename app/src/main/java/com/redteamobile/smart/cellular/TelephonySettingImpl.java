@@ -43,7 +43,6 @@ public class TelephonySettingImpl implements TelephonySetting {
     private static final String APN_NAME = "Redtea Mobile";
     private static final Uri APN_URI = Uri.parse("content://telephony/carriers");
     private static final Uri PREFERRED_APN_URI = Uri.parse("content://telephony/carriers/preferapn");
-
     private TelephonyManager telephonyManager;
     private SubscriptionManager subscriptionManager;
     private ConnectivityManager connectivityManager;
@@ -268,8 +267,8 @@ public class TelephonySettingImpl implements TelephonySetting {
 
     @Override
     public String getNetworkType() {
-        String netType = "UNKNOWN";
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        String netType = "4G";
+        NetworkInfo networkInfo= connectivityManager.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
             if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
                 netType = "WIFI";
@@ -311,7 +310,10 @@ public class TelephonySettingImpl implements TelephonySetting {
                 }
 
             }
+
         }
+
+        LogUtil.e(TAG,"net typr===:"+netType);
         return netType;
     }
 
