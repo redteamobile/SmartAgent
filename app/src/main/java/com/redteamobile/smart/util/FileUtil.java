@@ -3,6 +3,10 @@ package com.redteamobile.smart.util;
 import android.content.Context;
 import android.util.Log;
 
+import com.redteamobile.smart.Constant;
+
+import java.io.File;
+
 public class FileUtil {
 
     /**

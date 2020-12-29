@@ -40,6 +40,8 @@ public class Jni {
 
     public final native int disableProfile(String iccid);
 
+    public final native int stopUicc();
+    public final native int startUicc();
 
     public int getMcc() {
         return SharePrefSetting.getMcc();
@@ -82,7 +84,6 @@ public class Jni {
     }
 
     public String getCurrentIccid() {
-
         return uiccManger.getCurIccid();
     }
 

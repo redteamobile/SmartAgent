@@ -19,7 +19,6 @@ import android.os.IBinder;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
-import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.redteamobile.monitor.IDispatcherService;
@@ -66,7 +65,7 @@ public class AgentService extends Service implements UiccExternal {
             if (dispatcherService != null) {
                 uiccManager.setService(dispatcherService);
             }
-            runAgentMain();
+            runAgentMain(true);
         }
 
         @Override
@@ -95,37 +94,40 @@ public class AgentService extends Service implements UiccExternal {
     @Override
     public void onCreate() {
         super.onCreate();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createNotification();
+        }
+
+        uiccManager = UiccManger.getInstance(this);
         new AssetManager(this).preloadedToCache();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ACTION_NETWORK_STATE_CHANGED);
         intentFilter.addAction(ACTION_BOOTSTRAP_READY);
+        intentFilter.addAction(Constant.ACTION_NOTIFY_STATE);
         LocalBroadcastManager.getInstance(this)
                 .registerReceiver(broadcastReceiver, intentFilter);
     }
 
     private void initAgent() {
-        uiccManager = UiccManger.getInstance(this);
         storagePath = FileUtil.getAppPath(this);
         uiccManager.init(storagePath);
         int uiccMode = getUiccMode();
         LogUtil.e(TAG, "uiccMode: " + uiccMode);
         if (uiccMode == Constant.EUICC_MODE) {
-            runAgentMain();
+            runAgentMain(false);
         } else if (uiccMode == Constant.VUICC_MODE) {
             bindService();
         }
     }
 
     // Delay calling jni main methods, etc.
-    private void runAgentMain() {
+    private void runAgentMain(boolean isVuicc) {
         new RetryUtil(looperUtil.getLooper(), new Runnable() {
             @Override
             public void run() {
                 uiccManager.main();
                 slotMonitor = new SlotMonitor(getApplicationContext());
                 slotMonitor.startMonitor();
-                LocalBroadcastManager.getInstance(AgentService.this)
-                        .sendBroadcast(new Intent(Constant.ACTION_NOTIFY_STATE));
             }
         }, 0 /* maxRetries */, 0 /* delayMillis */).retry(false);
     }
@@ -188,6 +190,16 @@ public class AgentService extends Service implements UiccExternal {
         return uiccManager.disableProfile(iccid);
     }
 
+    @Override
+    public int closeUicc() {
+        return uiccManager.closeUicc();
+    }
+
+    @Override
+    public int insertUicc() {
+        return uiccManager.insertUicc();
+    }
+
     public class MyBinder extends Binder {
         public AgentService getService() {
             return AgentService.this;
@@ -196,14 +208,42 @@ public class AgentService extends Service implements UiccExternal {
 
     @Override
     public IBinder onBind(Intent intent) {
-        return new MyBinder();
+        return new AgentService.MyBinder();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        LocalBroadcastManager.getInstance(AgentService.this)
-                .sendBroadcast(new Intent(Constant.ACTION_NOTIFY_STATE));
+
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void createNotification() {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        // 通知渠道的id
+        String id = "my_channel_02";
+        // 用户可以看到的通知渠道的名字.
+        CharSequence name = "Agent";
+//         用户可以看到的通知渠道的描述
+        String description = "start Agent";
+        int importance = NotificationManager.IMPORTANCE_HIGH;
+        NotificationChannel mChannel = new NotificationChannel(id, name, importance);
+        mChannel.setLightColor(Color.RED);
+        mChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+//         最后在notificationmanager中创建该通知渠道 //
+        notificationManager.createNotificationChannel(mChannel);
+
+        // 为该通知设置一个id
+        int notifyID = 2;
+        // 通知渠道的id
+        String CHANNEL_ID = id;
+        // Create a notification and set the notification channel.
+        Notification notification = new Notification.Builder(this)
+                .setContentTitle("New Message").setContentText("You've received new messages.")
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setChannelId(CHANNEL_ID)
+                .build();
+        startForeground(notifyID, notification);
     }
 
     private boolean bindService() {
@@ -213,33 +253,11 @@ public class AgentService extends Service implements UiccExternal {
                 new ComponentName(Constant.MONITOR_PACKAGE_NAME, Constant.MONITOR_SERVICE_NAME));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(intent);
-            startOForeground();
         } else {
             startService(intent);
         }
         result = bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
         return result;
-    }
-
-    //Android O 启动需要前台服务
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void startOForeground() {
-        String NOTIFICATION_CHANNEL_ID = getString(R.string.channel_id);
-        String channelName = getString(R.string.channel_name);
-        NotificationChannel chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_NONE);
-        chan.setLightColor(Color.RED);
-        chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
-        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        manager.createNotificationChannel(chan);
-
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
-        Notification notification = notificationBuilder.setOngoing(true)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(getString(R.string.notify_title))
-                .setPriority(NotificationManager.IMPORTANCE_MIN)
-                .setCategory(Notification.CATEGORY_SERVICE)
-                .build();
-        startForeground(2, notification);
     }
 
     private void stopService() {

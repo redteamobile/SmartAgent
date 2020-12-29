@@ -22,7 +22,9 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.redteamobile.library.BuildConfig;
 import com.redteamobile.smart.agent.AgentService;
+import com.redteamobile.smart.external.ActionCode;
 import com.redteamobile.smart.recycler.ProfileAdapter;
 import com.redteamobile.smart.recycler.ProfileModel;
 import com.redteamobile.smart.util.SharePrefSetting;
@@ -48,6 +50,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private TextView vuiccMode;
     private TextView enableProTv;
     private TextView finishTv;
+    private TextView stopTv;
+    private TextView insertTv;
 
     private AgentService agentService;
     private final byte[] eId = new byte[32];
@@ -96,6 +100,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
         vuiccMode = findViewById(R.id.vuiccMode);
         enableProTv = findViewById(R.id.enable_provisioningTv);
         finishTv = findViewById(R.id.deleteAllTv);
+        stopTv = findViewById(R.id.stopUICC);
+        insertTv = findViewById(R.id.insertUICC);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -111,10 +117,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
         vuiccMode.setOnClickListener(this);
         enableProTv.setOnClickListener(this);
         finishTv.setOnClickListener(this);
+        findViewById(R.id.insertUICC).setOnClickListener(this);
+        findViewById(R.id.stopUICC).setOnClickListener(this);
 
         Intent intent = new Intent(this, AgentService.class);
         startService(intent);
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+
+        updateUiccUI(true);
     }
 
     @Override
@@ -221,7 +231,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
         switch (v.getId()) {
             case R.id.euiccMode:
-                // 需要插入EUICC卡
                 agentService.setUiccMode(Constant.EUICC_MODE);
                 updateModeUI();
                 Toast.makeText(MainActivity.this, getString(R.string.reboot_work), Toast.LENGTH_SHORT).show();
@@ -229,7 +238,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             case R.id.vuiccMode:
                 agentService.setUiccMode(Constant.VUICC_MODE);
                 updateModeUI();
-                Toast.makeText(MainActivity.this,  getString(R.string.reboot_work), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, getString(R.string.reboot_work), Toast.LENGTH_SHORT).show();
                 break;
             case R.id.enable_next_operationalTv:
                 if (profileList.size() > 1) {
@@ -261,7 +270,30 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     }
                 }
                 break;
+            case R.id.stopUICC:
+                if (agentService == null && profileList.size() == 0) {
+                    return;
+                }
+                updateUiccUI(agentService.closeUicc() != ActionCode.SUCCESS.getCode());
+                break;
+
+            case R.id.insertUICC:
+                if (agentService == null && profileList.size() == 0) {
+                    return;
+                }
+
+                updateUiccUI(agentService.insertUicc() == ActionCode.SUCCESS.getCode());
+                break;
         }
+    }
+
+    /**
+     * Update the UI to insert the stop button
+     * @param flag
+     */
+    private void updateUiccUI(boolean flag) {
+        insertTv.setEnabled(!flag);
+        stopTv.setEnabled(flag);
     }
 
 

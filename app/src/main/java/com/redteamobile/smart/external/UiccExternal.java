@@ -21,5 +21,11 @@ public interface UiccExternal {
 
     public int disableProfile(String iccid);
 
+    public int closeUicc();
+
+    public int insertUicc();
+
     public String getImei();
+
+
 }

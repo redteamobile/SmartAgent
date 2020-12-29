@@ -159,6 +159,30 @@
             android:textSize="18sp" />
 
         <TextView
+            android:id="@+id/stopUICC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/button_bg_state"
+            android:gravity="center"
+            android:padding="15dp"
+            android:text="@string/close_card"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/insertUICC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/button_bg_state"
+            android:gravity="center"
+            android:padding="15dp"
+            android:text="再次插入卡"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
+        <TextView
             android:id="@+id/deleteAllTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

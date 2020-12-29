@@ -38,7 +38,7 @@ public class SlotMonitor {
     private LooperUtil looperUtil;
     private TelephonySetting telephonySetting;
     private TelephonyManager telephonyManager;
-    private DefaultPhoneStateListener phoneStateListener;
+    private SlotMonitor.DefaultPhoneStateListener phoneStateListener;
     private boolean changedBroadcastRegistered;
 
     private BroadcastReceiver simStateChangedReceiver = new BroadcastReceiver() {
@@ -79,7 +79,7 @@ public class SlotMonitor {
         if (phoneStateListener != null) {
             unregisterPhoneStateListener();
         }
-        phoneStateListener = new DefaultPhoneStateListener();
+        phoneStateListener = new SlotMonitor.DefaultPhoneStateListener();
         telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
     }
 
@@ -174,14 +174,15 @@ public class SlotMonitor {
         @Override
         public void onAvailable(@NonNull Network network) {
             super.onAvailable(network);
-            LogUtil.i(TAG,"onAvailable=========");
+            String type = telephonySetting.getNetworkType();
+            LogUtil.i(TAG, "onAvailable== : " + type);
             check(Constant.DSI_STATE_CALL_CONNECTED);
         }
 
         // 网络断开
         public void onLost(Network network) {
             // 如果通过ConnectivityManager#getActiveNetwork()返回null，表示当前已经没有其他可用网络了。
-            LogUtil.i(TAG,"onLost=========");
+            LogUtil.i(TAG, "onLost=====");
             check(Constant.DSI_STATE_CALL_IDLE);
         }
     };

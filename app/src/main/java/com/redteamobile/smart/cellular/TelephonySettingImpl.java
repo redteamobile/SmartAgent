@@ -20,6 +20,7 @@ import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
 
+import com.redteamobile.smart.BuildConfig;
 import com.redteamobile.smart.util.LogUtil;
 import com.redteamobile.smart.util.SharePrefSetting;
 
@@ -43,6 +44,7 @@ public class TelephonySettingImpl implements TelephonySetting {
     private static final String APN_NAME = "Redtea Mobile";
     private static final Uri APN_URI = Uri.parse("content://telephony/carriers");
     private static final Uri PREFERRED_APN_URI = Uri.parse("content://telephony/carriers/preferapn");
+
     private TelephonyManager telephonyManager;
     private SubscriptionManager subscriptionManager;
     private ConnectivityManager connectivityManager;
@@ -74,7 +76,8 @@ public class TelephonySettingImpl implements TelephonySetting {
         String imei = "";
         try {
             Method getImei = TelephonyManager.class.getDeclaredMethod("getImei", Integer.TYPE);
-            imei = (String) getImei.invoke(this.telephonyManager, 0);
+            imei = (String) getImei.invoke(this.telephonyManager, BuildConfig.SLOT);
+            Log.e(TAG, "getImei: "+imei );
         } catch (Exception e) {
             Log.e(TAG, "Reflection exception" + e.getMessage());
         }
@@ -196,10 +199,10 @@ public class TelephonySettingImpl implements TelephonySetting {
             return null;
         }
         SubscriptionInfo info = subscriptionManager.getActiveSubscriptionInfoForSimSlotIndex(0);
-            if (info != null) {
-                // 在插入卡片的时候多数情况会不对
-                iccId = info.getIccId();
-            }
+        if (info != null) {
+            // 在插入卡片的时候多数情况会不对
+            iccId = info.getIccId();
+        }
         if (!TextUtils.isEmpty(iccId) && !TextUtils.equals(iccId, SharePrefSetting.getCurrentIccId())) {
             SharePrefSetting.putCurrentIccId(iccId);
         }
@@ -265,10 +268,15 @@ public class TelephonySettingImpl implements TelephonySetting {
         return Build.BRAND;
     }
 
+    /**
+     * 如果netType 是UNKNOWN 那么就重复获取三次
+     *
+     * @return
+     */
     @Override
     public String getNetworkType() {
         String netType = "4G";
-        NetworkInfo networkInfo= connectivityManager.getActiveNetworkInfo();
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
             if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
                 netType = "WIFI";
@@ -313,7 +321,6 @@ public class TelephonySettingImpl implements TelephonySetting {
 
         }
 
-        LogUtil.e(TAG,"net typr===:"+netType);
         return netType;
     }
 

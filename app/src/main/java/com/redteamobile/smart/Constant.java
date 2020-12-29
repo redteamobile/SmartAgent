@@ -18,5 +18,6 @@ public class Constant {
     public static final int UNKNOWN_MODE = -1;
     public static final int EUICC_MODE = 1;
     public static final int VUICC_MODE = 0;
-
+    public static final int PRO_TYPR = 1; // 种子卡类型
+    public static final int OP_TYPR = 2; // 业务卡类型
 }

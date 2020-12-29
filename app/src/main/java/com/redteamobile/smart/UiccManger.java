@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
  * 管理euicc和vuicc功能类,包括获取系统信息等
  */
 public class UiccManger implements UiccExternal {
+    private static final String TAG = UiccManger.class.getSimpleName();
     private static UiccManger instance;
     private Jni jni;
     private String storagePath;
@@ -102,6 +103,16 @@ public class UiccManger implements UiccExternal {
     @Override
     public final int disableProfile(String iccid) {
         return jni.disableProfile(iccid);
+    }
+
+    @Override
+    public int closeUicc() {
+        return jni.stopUicc();
+    }
+
+    @Override
+    public int insertUicc() {
+        return jni.startUicc();
     }
 
     @Override
@@ -192,4 +203,5 @@ public class UiccManger implements UiccExternal {
     public String getNetworkType() {
         return telephonySetting.getNetworkType();
     }
+
 }

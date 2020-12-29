@@ -18,4 +18,5 @@
     <string name="channel_name">Smart Background Service</string>
     <string name="channel_id">com.redteamobile.smart</string>
     <string name="monitor_uninstall">Monitor uninstall.</string>
+    <string name="close_card">关闭软卡</string>
 </resources>
