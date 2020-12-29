@@ -32,3 +32,6 @@
 ## 说明
 
 * Open Interface 在JniInterface的类中有定义及详细的说明
+
+Change Log:
+  1.v1.0.1-- 新增 Insert ,Stop 接口；
