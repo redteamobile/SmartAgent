@@ -119,6 +119,13 @@ public class UiccManger implements UiccExternal {
     public String getImei() {
         return telephonySetting.getImei();
     }
+    public int getMcc() {
+        return SharePrefSetting.getMcc();
+    }
+
+    public int getMnc() {
+        return SharePrefSetting.getMnc();
+    }
 
     public String getModel() {
         return telephonySetting.getModel();

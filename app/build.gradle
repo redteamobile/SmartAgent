@@ -16,8 +16,8 @@ android {
         applicationId "com.redteamobile.smart"
         minSdkVersion 22
         targetSdkVersion 29
-        versionCode 2
-        versionName "1.0.1"
+        versionCode 3
+        versionName "1.0.2"
         buildConfigField "int", "SLOT", "0"
         buildConfigField "boolean", "LOG", "true"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -50,7 +50,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation(name: 'library-1.0.3-release', ext: 'aar')
+    implementation(name: 'library-1.0.3-release-prod', ext: 'aar') // 根据不同环境依赖不同的aar
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation "androidx.recyclerview:recyclerview:1.1.0"
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'

@@ -44,11 +44,11 @@ public class Jni {
     public final native int startUicc();
 
     public int getMcc() {
-        return SharePrefSetting.getMcc();
+        return uiccManger.getMcc();
     }
 
     public int getMnc() {
-        return SharePrefSetting.getMnc();
+        return uiccManger.getMnc();
     }
 
     public String getImei() {
