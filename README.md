@@ -1,6 +1,6 @@
-# Smart Agent
+# Smart Agent Java版本
 
-README [中文](https://github.com/redteamobile/SmartAgent/blob/master-smart-agent/README.md) | [ENGLISH](https://github.com/redteamobile/SmartAgent/blob/master-smart-agent/README-EG.md) 
+[ENGLISH](https://github.com/redteamobile/SmartAgent/blob/smart-agent-java-dev/README-EG.md)
 
 * 本仓库主要管理红茶端侧安卓方案，开放部分源码。用户可以基于这部分源码，做定制化开发，以满足自己的业务场景
 
@@ -32,3 +32,6 @@ README [中文](https://github.com/redteamobile/SmartAgent/blob/master-smart-age
 ## 说明
 
 * Open Interface 在JniInterface的类中有定义及详细的说明
+
+Change Log:
+  1.v1.0.1-- 新增 Insert ,Stop 接口；
